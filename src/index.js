@@ -8,6 +8,7 @@ import './index.css';
 import App from './App';
 import TestPage from './TestPage';
 import LoginPage from './LoginPage';
+import InfoPage from "./InfoPage"
 import {
   createBrowserRouter,
   RouterProvider,
@@ -16,6 +17,13 @@ import {
 import { Provider } from "react-redux";
 import store from "./store";
 import config from "./config.json";
+import TimeAgo from 'javascript-time-ago'
+
+import en from 'javascript-time-ago/locale/en.json'
+import ru from 'javascript-time-ago/locale/ru.json'
+
+TimeAgo.addDefaultLocale(en)
+TimeAgo.addLocale(ru)
 
 async function fetchUser(token) {
   let request = await fetch(config.endpoint + "/auth/user", {
@@ -40,6 +48,16 @@ const router = createBrowserRouter([
       {
         path: "test",
         element: <TestPage />
+      },
+      {
+        path: "info",
+        loader: async () => {
+          let request = await fetch(config.endpoint + "/machineInfo", { headers: { Authorization: localStorage.getItem("token") }})
+          let data = await request.json();
+          store.dispatch({ type: 'info/infoChanged', payload: data })
+          return null
+        },
+        element: <InfoPage />
       }
     ]
   },

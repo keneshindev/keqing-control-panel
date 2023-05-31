@@ -1,5 +1,6 @@
 const initialState = {
-    user: null
+    user: null,
+    machineInfo: {}
 }
 export default function appReducer(state = initialState, action) {
   switch (action.type) {
@@ -12,6 +13,11 @@ export default function appReducer(state = initialState, action) {
         return {
             ...state,
             user: null
+        }
+    case 'info/infoChanged':
+        return {
+            ...state,
+            machineInfo: action.payload
         }
     default:
       return state
